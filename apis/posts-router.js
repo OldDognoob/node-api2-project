@@ -108,12 +108,27 @@ router.post("/api/posts/:id/comments", (req, res) => {
       }
     })
     .catch(error => {
-      res
-        .status(500)
-        .json({
-          error: "There was an error while saving the comment to the database"
-        });
+      res.status(500).json({
+        error: "There was an error while saving the comment to the database"
+      });
     });
 });
 
-
+//[DELETE]
+//The post has been removed
+router.delete("/api/posts/:id", (req, res) => {
+  const { id } = req.params;
+  db.remove(id)
+    .then(post => {
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error: "The post could not be removed" });
+    });
+});

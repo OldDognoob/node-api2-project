@@ -67,14 +67,18 @@ router.get("/api/posts/:id/comments", (req, res) => {
 
 //[POST]
 //We create a post using the information provides to us from the req.body
-router.post("/", (req, res) => {
-  const NewPost = { title: req.body, content: req.body };
-  if (!NewPost.title || !NewPost.content) {
+router.post("/api/posts", (req, res) => {
+ 
+  const { title, contents } = req.body;
+  const NewPost = {
+    title, contents
+  }
+  if (!NewPost.title || !NewPost.contents) {
     res.status(400).json({
       errorMessage: "Please provide title and contents for the post."
     });
   }
-  db.insert(newPost)
+  db.insert(NewPost)
     .then(post => {
       res.status(201).json(post);
     })
@@ -90,8 +94,9 @@ router.post("/", (req, res) => {
 router.post("/api/posts/:id/comments", (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
+  
 
-  db.findById(id)
+  db.findById(id).first()
     .then(post => {
       if (!post) {
         res
@@ -102,7 +107,7 @@ router.post("/api/posts/:id/comments", (req, res) => {
           .status(400)
           .json({ errorMessage: "Please provide text for the comment." });
       } else {
-        insertComment({ text, post_id: id }).then(comment => {
+        db.insertComment({ text, post_id: post.id }).then(comment => {
           res.status(201).json(comment);
         });
       }
@@ -139,7 +144,7 @@ router.put("/api/posts/:id", (req, res) => {
   const { id } = req.params;
   const post = req.body;
 
-  if (!post.title || !post.contents) {
+  if (post.title || post.contents) {
     db.update(id, post)
       .then(post => {
         if (post) {

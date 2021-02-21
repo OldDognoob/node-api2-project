@@ -8,10 +8,15 @@
     "server": "nodemon index.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "knex": "^0.20.7",
     "sqlite3": "^4.1.1"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "eslint": "^6.8.0",
     "nodemon": "^2.0.2"
   }
 }
